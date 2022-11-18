@@ -29,6 +29,9 @@ autores_buscar <- base_bruta_filtrada |>
   dplyr::distinct(author_id) |> 
   dplyr::pull(author_id)
   
+# BUSCAR PARA TODOS OS AUTORES!
+# ALTERAR PARA BAIXAR AOS POUCOS.
+
 
 autores_tweets <- academictwitteR::get_user_profile(autores_buscar)
 
@@ -60,3 +63,10 @@ base_tweets_mais_pops <- dplyr::left_join(base_bruta_filtrada, metricas_tweets_f
 
 
 base_tweets_mais_pops |> write_rds("data/base_tweets_mais_pops.rds")  
+
+
+# Criar a tabela para colar no google sheets
+
+base_tweets_mais_pops |> 
+  dplyr::select(id, autor_username, autor_name, text = text.x) |> 
+  writexl::write_xlsx("data/tweets-pops-para-categorizar.xlsx")
