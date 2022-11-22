@@ -1,17 +1,23 @@
-library(academictwitteR)
+# library(academictwitteR)
 library(readr)
-library(writexl)
-library(purrr)
-library(readxl)
+# library(writexl)
+# library(purrr)
+# library(readxl)
 library(dplyr)
-library(janitor)
+# library(janitor)
 library(ggplot2)
 # install.packages('esquisse')
 library(esquisse)
 
 # lendo a base completa
-base_completa <- read_rds('data/data-bia/base_tweets_completa.rds') %>% 
+base_completa <- read_rds('data/base_tweets_completa.rds') %>% 
  filter(!author_username %in% c('magalu', 'luizatrajano')) # remover tweets magalu e luizatrajano 
+
+
+
+
+# Gráfico de tweets ao longo do tempo -------------------------------------
+
 
 # preparação da base
 tweets_por_data <- base_completa %>% 
