@@ -5,6 +5,7 @@ library(dplyr)
 library(readr)
 library(googlesheets4)
 library(janitor)
+library(writexl)
 
 # lendo a base completa
 base_completa <- read_rds('data/data-bia/base_tweets_completa.rds') %>% 
@@ -21,7 +22,7 @@ base_categorizada_completa <- left_join(base_categoriza, base_completa, by = 'id
   filter(!autor_username %in% c('magalu', 'luizatrajano'), orientacao_categoria != '-') %>% 
   mutate(cod_tweets_magalu = as.character(cod_tweets_magalu)) 
 
-base_categorizada_completa %>% 
+sumarizacao_categorias <- base_categorizada_completa %>% 
   group_by(orientacao_categoria, cod_tweets_magalu, categoria) %>% 
   summarise(qtd_tweets = n(),
             soma_like = sum(like_count),
@@ -29,5 +30,9 @@ base_categorizada_completa %>%
             soma_respostas_tweet = sum(reply_count),
             soma_quotes = sum(quote_count),
             usuarios = paste0(unique(autor_username), collapse = ', ')) %>% 
-  arrange(desc(soma_like)) %>% 
-  View()
+  arrange(desc(soma_like))
+
+write_xlsx(sumarizacao_categorias, 'data/sumaricao_categorias.xlsx')
+
+
+
