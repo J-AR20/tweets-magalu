@@ -6,6 +6,11 @@ library(readr)
 library(googlesheets4)
 library(janitor)
 library(writexl)
+library(stringr)
+
+# install.packages('abjutils')
+library(abjutils)
+
 
 # lendo a base completa
 base_completa <- read_rds('data/data-bia/base_tweets_completa.rds') %>% 
@@ -33,6 +38,19 @@ sumarizacao_categorias <- base_categorizada_completa %>%
   arrange(desc(soma_like))
 
 write_xlsx(sumarizacao_categorias, 'data/sumaricao_categorias.xlsx')
+
+
+# DETECTANDO A EXTREMA-DIREITA --------------------------------------------
+
+extrem_words <- c('patriota', 'bolsonaro', 'armamentista', 'conservador', '2️⃣2️⃣') %>% 
+  paste0(collapse = '|')
+
+
+base_categorizada_completa %>% 
+  filter(orientacao_categoria != 'outros') %>% 
+  mutate(author_description_clean = str_to_lower(author_description) %>% rm_accent(),
+         author_description_extrem = str_detect(author_description_clean, extrem_words)) %>% 
+  View()
 
 
 
