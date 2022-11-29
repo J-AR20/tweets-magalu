@@ -58,7 +58,7 @@ base_categorizada_completa %>%
          author_name_extrem = str_detect(author_name_clean, extrem_words)) %>% 
   View()
 
-# separando lista com os posicionamentos contrários da base_categorizada_completa para análise manual
+# separando a lista apenas com os posicionamentos contrários da base_categorizada_completa
 
 tweets_contrarios <- base_categorizada_completa %>% 
   filter(orientacao_categoria != 'favoravel') %>% 
@@ -66,3 +66,21 @@ tweets_contrarios <- base_categorizada_completa %>%
   select(id, autor_username, author_description)
 
 write_xlsx(tweets_contrarios, 'data/tweets_contrarios.xlsx')
+
+# separando a lista apenas com os posicionamentos favoraveis da base_categorizada_completa
+
+tweets_favoraveis <- base_categorizada_completa %>% 
+  filter(orientacao_categoria != 'contrario') %>% 
+  filter(orientacao_categoria != 'outros') %>% 
+  select(id, autor_username, author_description)
+
+write_xlsx(tweets_favoraveis, 'data/tweets_favoraveis.xlsx')
+
+# procurando perfis em mais de uma categoria
+
+contrarios <- read_sheet(url_google_sheet, 'tweets_contrarios')
+favoraveis <- read_sheet(url_google_sheet, 'tweets_favoraveis')
+
+# vou juntar as bases para descobrir quais nomes se repetem a fim de reavaliar a classificação de cada um:
+base_posicionamento_completa <- left_join(contrarios, favoraveis, by = 'autor_username')
+
