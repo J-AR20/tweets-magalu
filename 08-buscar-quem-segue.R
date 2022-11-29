@@ -10,9 +10,9 @@ library(readr)
 
 url_google_sheet <- 'https://docs.google.com/spreadsheets/d/1z3oNAxrIYHZkjwVirRxLKiGMQAyxGE8cAemfXvusUUY/edit#gid=462148650'
 
-base_users_contrarios <- googlesheets4::read_sheet(url_google_sheet, 'tweets_contrarios')
+base_users <- googlesheets4::read_sheet(url_google_sheet, 'tweets_favoraveis')
 
-lista_buscar <- base_users_contrarios |> dplyr::distinct(id, .keep_all = TRUE)
+lista_buscar <- base_users |> dplyr::distinct(id, .keep_all = TRUE)
 
 
 users_baixados <- list.files("data/author_following/") |> 
