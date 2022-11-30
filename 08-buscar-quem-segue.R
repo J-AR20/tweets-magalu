@@ -1,18 +1,19 @@
 library(readr)
 
 
-# base_categorizada_completa <- read_rds("data/base_categorizada_completa.rds")
-# 
-# autores_unicos <- base_categorizada_completa |> 
-#   dplyr::arrange(desc(like_count)) |> 
-#   dplyr::distinct(author_id, author_username, .keep_all = TRUE)
+base_categorizada_completa <- read_rds("data/base_categorizada_completa.rds")
+
+lista_buscar <- base_categorizada_completa |>
+  dplyr::filter(orientacao_categoria %in% c("favoravel", "contrario")) |> 
+  dplyr::arrange(author_following_count) |>
+  dplyr::distinct(author_id, author_username, .keep_all = TRUE)
 
 
-url_google_sheet <- 'https://docs.google.com/spreadsheets/d/1z3oNAxrIYHZkjwVirRxLKiGMQAyxGE8cAemfXvusUUY/edit#gid=462148650'
+# url_google_sheet <- 'https://docs.google.com/spreadsheets/d/1z3oNAxrIYHZkjwVirRxLKiGMQAyxGE8cAemfXvusUUY/edit#gid=462148650'
 
-base_users <- googlesheets4::read_sheet(url_google_sheet, 'tweets_favoraveis')
+# base_users <- googlesheets4::read_sheet(url_google_sheet, 'tweets_favoraveis')
 
-lista_buscar <- base_users |> dplyr::distinct(id, .keep_all = TRUE)
+# lista_buscar <- base_users |> dplyr::distinct(id, .keep_all = TRUE)
 
 
 users_baixados <- list.files("data/author_following/") |> 
