@@ -10,11 +10,9 @@ library(ggplot2)
 library(esquisse)
 
 # lendo a base completa
-base_completa <- read_rds('data/base_tweets_completa.rds') %>% 
- filter(!author_username %in% c('magalu', 'luizatrajano')) # remover tweets magalu e luizatrajano 
-
-
-
+base_completa <- read_rds('data/data-bia/base_tweets_completa.rds') %>% 
+  filter(!author_username %in% c('magalu', 'luizatrajano', 'HaddadDebochado', 'direitasiqueira', 'LUIZPATRIOTA39'))
+# removi acima os tweets obviamente partidários da magalu e luizatrajano, e aqueles de perfis de humor 
 
 # Gráfico de tweets ao longo do tempo -------------------------------------
 
