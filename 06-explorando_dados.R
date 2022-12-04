@@ -10,7 +10,7 @@ library(ggplot2)
 library(esquisse)
 
 # lendo a base completa
-base_completa <- read_rds('data/data-bia/base_tweets_completa.rds') %>% 
+base_completa <- read_rds('data/base_tweets_completa.rds') %>% 
   filter(!author_username %in% c('magalu', 'luizatrajano', 'HaddadDebochado', 'direitasiqueira', 'LUIZPATRIOTA39'))
 # removi acima os tweets obviamente partidários da magalu e luizatrajano, e aqueles de perfis de humor 
 
@@ -27,6 +27,8 @@ ggplot(tweets_por_data) +
   aes(x = data, y = n) +
   geom_line(size = 0.5, colour = "#112446") +
   labs(
-    caption = "Dados extraídos da API do Twitter usando o pacote academictwitteR"
-  ) +
-  ggthemes::theme_fivethirtyeight()
+    caption = "\n Fonte: Dados extraídos da API do Twitter usando o pacote academictwitteR",
+    y = "Quantidade de Tweets",
+    x = "Mês/Ano"
+  ) + 
+  theme_light()
