@@ -1,4 +1,7 @@
 # DETECTANDO A EXTREMA-DIREITA --------------------------------------------
+library(readr)
+library(tidyverse)
+library(abjutils)
 
 base_categorizada_completa <- read_rds("data/base_categorizada_completa.rds")
 
@@ -16,11 +19,15 @@ base_categorizada_completa %>%
          author_name_extrem = str_detect(author_name_clean, extrem_words)) |>
   View()
 
+# TODO!
+
 # ------
 
 url_google_sheet <- 'https://docs.google.com/spreadsheets/d/1z3oNAxrIYHZkjwVirRxLKiGMQAyxGE8cAemfXvusUUY/edit#gid=462148650'
 
 users_perfis_direita <- googlesheets4::read_sheet(url_google_sheet, 'perfis_bolsonaristas')
+
+users_perfis_esquerda <- googlesheets4::read_sheet(url_google_sheet, 'perfis_frente_ampla')
 
 base_completa <- readr::read_rds("data/base_categorizada_completa.rds")
 
@@ -42,10 +49,13 @@ quem_segue_quem <- seguidores |>
     eh_perfil_extrema_direita = dplyr::case_when(
       username %in% users_perfis_direita$author_username ~ TRUE,
       TRUE ~ FALSE
-    )
+    ),
+    eh_perfil_frente_ampla = dplyr::case_when(
+      username %in% users_perfis_esquerda$author_username ~ TRUE,
+      TRUE ~ FALSE
+    ),
   ) 
 
-qnt_perfis_direita <- nrow(users_perfis_direita)
 
 usuarios <- base_completa |>
   dplyr::select(
@@ -53,17 +63,14 @@ usuarios <- base_completa |>
   ) |> 
   dplyr::distinct()
 
-quem_segue_perfis_minions <- quem_segue_quem |>
-  dplyr::group_by(author_seguidor, eh_perfil_extrema_direita) |>
-  dplyr::count() |>
-  dplyr::filter(eh_perfil_extrema_direita == TRUE) |>
-  dplyr::ungroup() |>
-  dplyr::mutate(porc =  n / qnt_perfis_direita) |> 
-  dplyr::arrange(desc(n)) |> 
+# REVISAR ISSO! To achando os numeros baixos.s
+quem_segue_perfis_esq_direita <- quem_segue_quem |>
+  dplyr::count(author_seguidor, eh_perfil_extrema_direita, eh_perfil_frente_ampla) |>
+  dplyr::filter(eh_perfil_extrema_direita == TRUE | eh_perfil_frente_ampla == TRUE) |>
   dplyr::left_join(usuarios) 
 
-quem_segue_perfis_minions |> 
-  readr::write_rds("data/seguidores-dos-ext-direita.rds")
+quem_segue_perfis_esq_direita |> 
+  readr::write_rds("data/seguidores-por-alinhamento.rds")
 
 
 
