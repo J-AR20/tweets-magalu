@@ -3,6 +3,7 @@ library(readr)
 library(tidyverse)
 library(abjutils)
 
+# TODO: verificar se essa base está atualizada antes de continuar
 base_categorizada_completa <- read_rds("data/base_categorizada_completa.rds")
 
 extrem_words <- c('patriota', 'bolsonaro', 'armamentista', 'anti-esquerda', 
@@ -11,17 +12,15 @@ extrem_words <- c('patriota', 'bolsonaro', 'armamentista', 'anti-esquerda',
                   'pro-vida','e conhecerao a verdade, e a verdade os libertara','conservador', '2️⃣2️⃣' ) %>% 
   paste0(collapse = '|')
 
-base_categorizada_completa %>% 
-  filter(orientacao_categoria != 'outros') %>% 
+base_deteccao_por_palavras <- base_categorizada_completa %>% 
+  filter(orientacao_categoria != 'outros', !cod_tweets_magalu %in% c("98", "99")) %>% 
   mutate(author_description_clean = str_to_lower(author_description) %>% rm_accent(),
          author_description_extrem = str_detect(author_description_clean, extrem_words),
          author_name_clean = str_to_lower(author_name) %>% rm_accent(),
-         author_name_extrem = str_detect(author_name_clean, extrem_words)) |>
-  View()
+         author_name_extrem = str_detect(author_name_clean, extrem_words)) 
 
-# TODO!
 
-# ------
+# Quem segue quem? ------
 
 url_google_sheet <- 'https://docs.google.com/spreadsheets/d/1z3oNAxrIYHZkjwVirRxLKiGMQAyxGE8cAemfXvusUUY/edit#gid=462148650'
 
@@ -63,7 +62,7 @@ usuarios <- base_completa |>
   ) |> 
   dplyr::distinct()
 
-# REVISAR ISSO! To achando os numeros baixos.s
+# REVISAR ISSO! To achando os numeros baixoss
 quem_segue_perfis_esq_direita <- quem_segue_quem |>
   dplyr::count(author_seguidor, eh_perfil_extrema_direita, eh_perfil_frente_ampla) |>
   dplyr::filter(eh_perfil_extrema_direita == TRUE | eh_perfil_frente_ampla == TRUE) |>
