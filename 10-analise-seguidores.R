@@ -3,7 +3,7 @@ library(readr)
 library(tidyverse)
 library(abjutils)
 
-# TODO: verificar se essa base está atualizada antes de continuar
+
 base_categorizada_completa <- read_rds("data/base_categorizada_completa.rds")
 
 extrem_words <- c('patriota', 'bolsonaro', 'armamentista', 'anti-esquerda', 
@@ -31,15 +31,16 @@ users_perfis_esquerda <- googlesheets4::read_sheet(url_google_sheet, 'perfis_fre
 base_completa <- readr::read_rds("data/base_categorizada_completa.rds")
 
 seguidores <- list.files(
-  "data/author_following/", full.names = TRUE
+  "data/busca_seguidores/", full.names = TRUE
 ) |> 
   unique() |> 
   purrr::map(readr::read_rds) |> 
-  dplyr::bind_rows()
+  dplyr::bind_rows() |> 
+  tidyr::drop_na(id) |> 
+  tibble::as_tibble() 
 
 
 quem_segue_quem <- seguidores |> 
-  tibble::as_tibble() |> 
   dplyr::select(
    author_seguidor = from_id,
    id, username
@@ -55,7 +56,6 @@ quem_segue_quem <- seguidores |>
     ),
   ) 
 
-
 usuarios <- base_completa |>
   dplyr::select(
     author_seguidor = author_id, autor_username
@@ -64,12 +64,19 @@ usuarios <- base_completa |>
 
 # REVISAR ISSO! To achando os numeros baixoss
 quem_segue_perfis_esq_direita <- quem_segue_quem |>
-  dplyr::count(author_seguidor, eh_perfil_extrema_direita, eh_perfil_frente_ampla) |>
-  dplyr::filter(eh_perfil_extrema_direita == TRUE | eh_perfil_frente_ampla == TRUE) |>
+  dplyr::select(author_seguidor, eh_perfil_extrema_direita, eh_perfil_frente_ampla) |> 
+  dplyr::group_by(author_seguidor) |> 
+  dplyr::summarise(soma_seguindo_direita = sum(eh_perfil_extrema_direita),
+                   soma_seguindo_frente_ampla = sum(eh_perfil_frente_ampla)) |>
   dplyr::left_join(usuarios) 
 
 quem_segue_perfis_esq_direita |> 
   readr::write_rds("data/seguidores-por-alinhamento.rds")
 
+
+# ---
+base_deteccao_por_palavras |> 
+  dplyr::left_join(quem_segue_perfis_esq_direita, by = "autor_username") |>
+  View()
 
 
