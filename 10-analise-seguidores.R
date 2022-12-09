@@ -1,4 +1,4 @@
-# DETECTANDO A EXTREMA-DIREITA --------------------------------------------
+# DETECTANDO A orientacao --------------------------------------------
 library(readr)
 library(tidyverse)
 library(abjutils)

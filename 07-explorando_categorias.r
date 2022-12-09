@@ -38,6 +38,8 @@ sumarizacao_categorias <- base_categorizada_completa %>%
             usuarios = paste0(unique(autor_username), collapse = ', ')) %>% 
   arrange(desc(soma_like))
 
+write_rds(base_categorizada_completa, 'data/base_categorizada_completa.rds')
+
 write_xlsx(sumarizacao_categorias, 'data/sumaricao_categorias.xlsx')
 
 
