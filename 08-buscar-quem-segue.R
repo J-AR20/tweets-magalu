@@ -5,7 +5,8 @@ base_categorizada_completa <- read_rds("data/base_categorizada_completa.rds")
 
 lista_buscar <- base_categorizada_completa |>
   filter(orientacao_categoria != 'outros', !cod_tweets_magalu %in% c("98", "99")) %>% 
-  dplyr::distinct(author_id, author_username, author_following_count, .keep_all = FALSE)
+  dplyr::distinct(author_id, author_username, author_following_count, .keep_all = FALSE) |> 
+  tidyr::drop_na(author_id)
 
 users_baixados <- list.files("data/busca_seguidores/") |> 
   stringr::str_remove(".rds")
@@ -25,3 +26,4 @@ lista_buscar |>
   dplyr::group_split(rowid) |> 
   purrr::walk(~buscar_user_following(id = .x$author_id, username =.x$author_username))
   
+"OK"
