@@ -6,6 +6,17 @@ library(abjutils)
 
 base_categorizada_completa <- read_rds("data/base_categorizada_completa.rds")
 
+
+# checar: manter esses perfis?
+# História No Paint; 
+# Haddad Debochado; 
+# QuebrandoOTabu;
+# Mídia NINJA; 	
+# História & Cultura
+
+
+
+# CUIDADO AQUI: FORA BOLSONARO ENTROU! Corrigir.
 extrem_words <- c('patriota', 'bolsonaro', 'armamentista', 'anti-esquerda', 
                   'cristao de direita', 'cristao', 'deus, familia, patria','direita', 'anti comunas', 
                   'desesquerdizando', 'liberdade', 'bolsonarista', 'brasil acima de tudo e deus acima de todos', 
@@ -27,8 +38,6 @@ url_google_sheet <- 'https://docs.google.com/spreadsheets/d/1z3oNAxrIYHZkjwVirRx
 users_perfis_direita <- googlesheets4::read_sheet(url_google_sheet, 'perfis_bolsonaristas')
 
 users_perfis_esquerda <- googlesheets4::read_sheet(url_google_sheet, 'perfis_frente_ampla')
-
-base_completa <- readr::read_rds("data/base_categorizada_completa.rds")
 
 seguidores <- list.files(
   "data/busca_seguidores/", full.names = TRUE
@@ -56,27 +65,29 @@ quem_segue_quem <- seguidores |>
     ),
   ) 
 
-usuarios <- base_completa |>
+usuarios <- base_categorizada_completa |>
   dplyr::select(
     author_seguidor = author_id, autor_username
   ) |> 
   dplyr::distinct()
 
 # REVISAR ISSO! To achando os numeros baixoss
-quem_segue_perfis_esq_direita <- quem_segue_quem |>
+seguidores_por_alinhamento <- quem_segue_quem |>
   dplyr::select(author_seguidor, eh_perfil_extrema_direita, eh_perfil_frente_ampla) |> 
   dplyr::group_by(author_seguidor) |> 
   dplyr::summarise(soma_seguindo_direita = sum(eh_perfil_extrema_direita),
                    soma_seguindo_frente_ampla = sum(eh_perfil_frente_ampla)) |>
   dplyr::left_join(usuarios) 
 
-quem_segue_perfis_esq_direita |> 
-  readr::write_rds("data/seguidores-por-alinhamento.rds")
 
 
 # ---
-base_deteccao_por_palavras |> 
-  dplyr::left_join(quem_segue_perfis_esq_direita, by = "autor_username") |>
-  View()
+seguidores_por_alinhamento_base_completa <- base_deteccao_por_palavras |> 
+  dplyr::left_join(seguidores_por_alinhamento, by = "autor_username") |>
+  dplyr::arrange(desc(soma_seguindo_direita))
+
+
+seguidores_por_alinhamento_base_completa |> 
+  readr::write_rds("data/seguidores-por-alinhamento.rds")
 
 
