@@ -15,20 +15,48 @@ base_categorizada_completa <- read_rds("data/base_categorizada_completa.rds")
 # História & Cultura
 
 
-
-# CUIDADO AQUI: FORA BOLSONARO ENTROU! Corrigir.
-extrem_words <- c('patriota', 'bolsonaro', 'armamentista', 'anti-esquerda', 
-                  'cristao de direita', 'cristao', 'deus, familia, patria','direita', 'anti comunas', 
-                  'desesquerdizando', 'liberdade', 'bolsonarista', 'brasil acima de tudo e deus acima de todos', 
-                  'pro-vida','e conhecerao a verdade, e a verdade os libertara','conservador', '2️⃣2️⃣' ) %>% 
+extreme_words <-
+  c(
+    'patriota',
+    'bolsonaro',
+    'armamentista',
+    'anti-esquerda',
+    'cristao de direita',
+    'cristao',
+    'deus, familia, patria',
+    'direita',
+    'anti comunas',
+    'desesquerdizando',
+    'liberdade',
+    'bolsonarista',
+    'brasil acima de tudo e deus acima de todos',
+    'pro-vida',
+    'e conhecerao a verdade, e a verdade os libertara',
+    'conservador',
+    '2️⃣2️⃣','2⃣2⃣','🇧🇷🇮🇱',
+    "fora lula",
+    '100%jb'
+  ) %>%
   paste0(collapse = '|')
 
-base_deteccao_por_palavras <- base_categorizada_completa %>% 
-  filter(orientacao_categoria != 'outros', !cod_tweets_magalu %in% c("98", "99")) %>% 
-  mutate(author_description_clean = str_to_lower(author_description) %>% rm_accent(),
-         author_description_extrem = str_detect(author_description_clean, extrem_words),
-         author_name_clean = str_to_lower(author_name) %>% rm_accent(),
-         author_name_extrem = str_detect(author_name_clean, extrem_words)) 
+
+funcao_detectar_extreme_words <- function(x){
+  dplyr::case_when(
+    str_detect(x, "fora bolsonaro|forabolsonaro|anti-bolsonarista") ~ FALSE,
+    str_detect(x, extreme_words) ~ TRUE,
+    TRUE ~ FALSE
+  )
+}
+
+base_deteccao_por_palavras <- base_categorizada_completa %>%
+  filter(orientacao_categoria != 'outros',
+         !cod_tweets_magalu %in% c("98", "99")) %>%
+  mutate(
+    author_description_clean = str_to_lower(author_description) %>% rm_accent(),
+    author_description_extrem = funcao_detectar_extreme_words(author_description_clean),
+    author_name_clean = str_to_lower(author_name) %>% rm_accent(),
+    author_name_extrem = funcao_detectar_extreme_words(author_name_clean)
+  ) 
 
 
 # Quem segue quem? ------
@@ -37,7 +65,7 @@ url_google_sheet <- 'https://docs.google.com/spreadsheets/d/1z3oNAxrIYHZkjwVirRx
 
 users_perfis_direita <- googlesheets4::read_sheet(url_google_sheet, 'perfis_bolsonaristas')
 
-users_perfis_esquerda <- googlesheets4::read_sheet(url_google_sheet, 'perfis_frente_ampla')
+users_perfis_frente_ampla <- googlesheets4::read_sheet(url_google_sheet, 'perfis_frente_ampla')
 
 seguidores <- list.files(
   "data/busca_seguidores/", full.names = TRUE
@@ -60,7 +88,7 @@ quem_segue_quem <- seguidores |>
       TRUE ~ FALSE
     ),
     eh_perfil_frente_ampla = dplyr::case_when(
-      username %in% users_perfis_esquerda$author_username ~ TRUE,
+      username %in% users_perfis_frente_ampla$author_username ~ TRUE,
       TRUE ~ FALSE
     ),
   ) 
