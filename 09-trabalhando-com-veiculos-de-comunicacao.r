@@ -41,7 +41,8 @@ media_tweets <- base_inicial |>
       author_username %in% c("elpais_brasil") ~ "Grupo PRISA",
       author_username %in% c("revistaoeste") ~ "Oeste",
       author_username %in% c("congressoemfoco", "jc_pe") ~ "Sistema Jornal do Commercio de Comunicação",
-      
+      author_username %in% c("MidiaNINJA") ~ "Mídia NINJA",
+      author_username %in% c("QuebrandoOTabu") ~ "Quebrando o tabu",
       TRUE ~ "CATEGORIZAR"
     ),
     
@@ -56,7 +57,10 @@ media_tweets <- base_inicial |>
                              "Brasil 247",
                              "Publisher Brasil",
                              "Grupo Metrópoles", 
-                             "Grupo PRISA") ~ "esquerda; centro-esquerda",
+                             "Grupo PRISA",
+                             "Mídia NINJA",
+                             "Quebrando o tabu"
+                             ) ~ "esquerda; centro-esquerda",
       grupos_de_midia %in% c("CNN Brasil Novus Mídia", "Oeste") ~ "direita",
       grupos_de_midia %in% c("British Broadcasting Corporation", "Caracol Web Design") ~ "centro",
       grupos_de_midia %in% c("Jornal da Cidade Online", "Gazeta do Povo", "Conexão Política") ~ "direita; extrema-direita",
@@ -65,6 +69,7 @@ media_tweets <- base_inicial |>
     )
   )
   
+writexl::write_xlsx(media_tweets, "data/tweets_jornalisticos.xlsx")
 
 media_tweets_categorizada <- media_tweets |> 
   group_by(grupos_de_midia, proximidade_ideologica_grupos_de_midia) %>% 
@@ -80,3 +85,21 @@ media_tweets_categorizada <- media_tweets |>
 
 
 write_xlsx(media_tweets_categorizada, 'data/media_tweets_categorizada.xlsx')
+
+
+
+media_tweets_tab_1 <- media_tweets_categorizada |> 
+  dplyr::select(grupos_de_midia, veiculos, proximidade_ideologica_grupos_de_midia) |> 
+  dplyr::arrange(grupos_de_midia)
+
+write_xlsx(media_tweets_tab_1, 'data/media_tweets_tab_1.xlsx')
+
+  
+
+
+media_tweets_tab_2 <- media_tweets_categorizada |> 
+  dplyr::select(-c(veiculos, veiculos_user, proximidade_ideologica_grupos_de_midia)) |> 
+  dplyr::arrange(desc(qtd_tweets))
+
+write_xlsx(media_tweets_tab_2, 'data/media_tweets_tab_2.xlsx')
+
