@@ -4,7 +4,7 @@ base_completa <- readr::read_rds("data/base_tweets_completa.rds")
 # o critério usado foi: tweets com mais de 100 likes:
 
 tweets_filtrados <- base_completa |> 
-  filter(!author_username %in% c('magalu', 'luizatrajano')) |>  # remover tweets magalu e luizatrajano 
+  dplyr::filter(!author_username %in% c('magalu', 'luizatrajano')) |>  # remover tweets magalu e luizatrajano 
   dplyr::filter(like_count >= 100)
 
 
