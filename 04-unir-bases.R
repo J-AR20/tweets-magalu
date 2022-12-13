@@ -15,6 +15,12 @@ base_tweets_completa <- dplyr::left_join(base_bruta, base_metricas,
   dplyr::left_join(base_users, by = c("author_id" = "author_id")) |>
   dplyr::arrange(desc(like_count)) |> 
   dplyr::select(text = text.x, author_id:id, query, data_pesquisa, 
-                retweet_count:quote_count,author_name:author_created_at)
+                retweet_count:quote_count,author_name:author_created_at) |> 
+  # removi os tweets obviamente partidários da magalu e luizatrajano,
+  # e aqueles de perfis de humor
+  dplyr::filter(!author_username %in% c('magalu', 'luizatrajano', 'HaddadDebochado', 
+                                 'direitasiqueira', 'LUIZPATRIOTA39',
+                                 'HistoriaNoPaint', 'nerdclassico'),
+         !author_name %in% c("Haddad Debochado")) 
 
 base_tweets_completa |> write_rds("data/base_tweets_completa.rds")  

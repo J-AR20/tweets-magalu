@@ -11,9 +11,7 @@ library(stringr)
 library(abjutils)
 
 # lendo a base completa
-base_completa <- read_rds('data/base_tweets_completa.rds') %>% 
-  filter(!author_username %in% c('magalu', 'luizatrajano', 'HaddadDebochado', 'direitasiqueira', 'LUIZPATRIOTA39')) 
-# removi acima os tweets obviamente partidários da magalu e luizatrajano, e aqueles de perfis de humor
+base_completa <- read_rds('data/base_tweets_completa.rds') 
 
 url_google_sheet <- 'https://docs.google.com/spreadsheets/d/1z3oNAxrIYHZkjwVirRxLKiGMQAyxGE8cAemfXvusUUY/edit#gid=462148650'
 

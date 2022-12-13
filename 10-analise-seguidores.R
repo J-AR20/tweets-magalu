@@ -7,14 +7,6 @@ library(abjutils)
 base_categorizada_completa <- read_rds("data/base_categorizada_completa.rds")
 
 
-# checar: manter esses perfis?
-# História No Paint; 
-# Haddad Debochado; 
-# QuebrandoOTabu;
-# Mídia NINJA; 	
-# História & Cultura
-
-
 extreme_words <-
   c(
     'patriota',
@@ -99,7 +91,7 @@ usuarios <- base_categorizada_completa |>
   ) |> 
   dplyr::distinct()
 
-# REVISAR ISSO! To achando os numeros baixoss
+
 seguidores_por_alinhamento <- quem_segue_quem |>
   dplyr::select(author_seguidor, eh_perfil_extrema_direita, eh_perfil_frente_ampla) |> 
   dplyr::group_by(author_seguidor) |> 
@@ -115,6 +107,7 @@ seguidores_por_alinhamento_base_completa <- base_deteccao_por_palavras |>
   dplyr::arrange(desc(soma_seguindo_direita))
 
 
+# salvar em excel!
 seguidores_por_alinhamento_base_completa |> 
   readr::write_rds("data/seguidores-por-alinhamento.rds")
 
