@@ -15,35 +15,39 @@ base_completa <- read_rds('data/base_tweets_completa.rds')
 
 url_google_sheet <- 'https://docs.google.com/spreadsheets/d/1z3oNAxrIYHZkjwVirRxLKiGMQAyxGE8cAemfXvusUUY/edit#gid=462148650'
 
-base_categorizada <- read_sheet(url_google_sheet, 'tweets-mais-de-cem-likes')
+base_categorizada <- googlesheets4::read_sheet(url_google_sheet, 'tweets-mais-de-cem-likes')
 
-nome_categoria <- read_sheet(url_google_sheet, 'definicao-categoria') %>% 
-  clean_names()
+nome_categoria <- googlesheets4::read_sheet(url_google_sheet, 'definicao-categoria') %>% 
+  janitor::clean_names()
 
-base_categorizada_completa <- left_join(base_categorizada, base_completa, by = 'id') %>% 
-  left_join(nome_categoria, by = "cod_tweets_magalu") %>% 
-  filter(!autor_username %in% c('magalu', 'luizatrajano', 'HaddadDebochado', 'direitasiqueira', 'LUIZPATRIOTA39'), 
+base_categorizada_completa <- dplyr::left_join(base_categorizada, base_completa, by = 'id') %>% 
+  dplyr::left_join(nome_categoria, by = "cod_tweets_magalu") %>% 
+  dplyr::filter(!autor_username %in% c('magalu', 'luizatrajano', 'HaddadDebochado', 'direitasiqueira', 'LUIZPATRIOTA39'), 
          orientacao_categoria != '-') %>% 
-  mutate(cod_tweets_magalu = as.character(cod_tweets_magalu)) 
+  dplyr::mutate(cod_tweets_magalu = as.character(cod_tweets_magalu)) 
 
 sumarizacao_categorias <- base_categorizada_completa %>% 
-  group_by(orientacao_categoria, cod_tweets_magalu, categoria) %>% 
-  summarise(qtd_tweets = n(),
+  dplyr::group_by(orientacao_categoria, cod_tweets_magalu, categoria) %>% 
+  dplyr::summarise(qtd_tweets = dplyr::n(),
             soma_like = sum(like_count, na.rm = TRUE),
             soma_retweet = sum(retweet_count, na.rm = TRUE),
             soma_respostas_tweet = sum(reply_count, na.rm = TRUE),
             soma_quotes = sum(quote_count, na.rm = TRUE),
             usuarios = paste0(unique(autor_username), collapse = ', ')) %>% 
-  arrange(desc(soma_like))
+  dplyr::arrange(desc(soma_like))
 
-write_rds(base_categorizada_completa, 'data/base_categorizada_completa.rds')
+readr::write_rds(base_categorizada_completa, 'data/base_categorizada_completa.rds')
 
-write_xlsx(sumarizacao_categorias, 'data/sumaricao_categorias.xlsx')
+writexl::write_xlsx(sumarizacao_categorias, 'data/sumaricao_categorias.xlsx')
 
 
 
 # Jonas explorando a base: 
 # separando a lista apenas com os posicionamentos contrários da base_categorizada_completa
+
+library(tidyverse)
+library(writexl)
+library(googlesheets4)
 
 tweets_contrarios <- base_categorizada_completa %>% 
   filter(orientacao_categoria != 'favoravel') %>% 
