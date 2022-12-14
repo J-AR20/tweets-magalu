@@ -20,7 +20,8 @@ linha_do_tempo <- googlesheets4::read_sheet("https://docs.google.com/spreadsheet
 linha_do_tempo_alterada <- linha_do_tempo |> 
   tidyr::separate(evento, sep = ": ", into = c("evento", "desc_evento")) |> 
   dplyr::mutate(data = as.Date(data),
-                evento = stringr::str_remove(evento, "Evento "))
+              #  evento = stringr::str_remove(evento, "Evento ")
+              )
 
 
 
@@ -42,7 +43,7 @@ grafico_linha_do_tempo <- ggplot(tweets_por_data) +
   aes(x = data, y = n) +
   geom_line(size = 0.5, colour = "#112446") +
   geom_point(data = tweets_por_data_com_evento, show.legend = FALSE) + 
- ggrepel::geom_label_repel(data = tweets_por_data_com_evento, aes(label = evento), show.legend = FALSE, nudge_y = 6000, nudge_x = 2, segment.color = "gray") + 
+ ggrepel::geom_label_repel(data = tweets_por_data_com_evento, aes(label = evento), size = 2, show.legend = FALSE, nudge_y = 6000, nudge_x = 2, segment.color = "gray") + 
   labs(
     caption = "\n Fonte: Dados extraídos da API do Twitter usando o pacote academictwitteR",
     y = "Quantidade de Tweets",
@@ -51,5 +52,6 @@ grafico_linha_do_tempo <- ggplot(tweets_por_data) +
   scale_x_date(date_labels = "%d/%m/%Y") +
   theme_light()
 
+grafico_linha_do_tempo
 
 ggsave(filename = "grafico_linha_do_tempo.png", plot = grafico_linha_do_tempo)
