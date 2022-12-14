@@ -104,11 +104,24 @@ seguidores_por_alinhamento <- quem_segue_quem |>
 # ---
 seguidores_por_alinhamento_base_completa <- base_deteccao_por_palavras |> 
   dplyr::left_join(seguidores_por_alinhamento, by = "autor_username") |>
-  dplyr::arrange(desc(soma_seguindo_direita))
+  dplyr::mutate(
+    diferenca_qnt_seguidores = soma_seguindo_direita - soma_seguindo_frente_ampla,
+    eh_direita = dplyr::case_when(
+    author_description_extrem == TRUE ~ TRUE,
+    author_name_extrem == TRUE ~ TRUE,
+    diferenca_qnt_seguidores > 10 ~ TRUE,
+    TRUE ~ NA
+  )) |> 
+  dplyr::arrange(desc(diferenca_qnt_seguidores))
 
 
-# salvar em excel!
+# salvar as bases!
 seguidores_por_alinhamento_base_completa |> 
-  readr::write_rds("data/seguidores-por-alinhamento.rds")
+  writexl::write_xlsx("data/seguidores-por-alinhamento.xlsx")
 
 
+# exportar uma versão sumarizada.
+
+seguidores_por_alinhamento_base_completa |>
+  dplyr::count(eh_direita, orientacao_categoria, categoria) |> 
+  writexl::write_xlsx("data/seguidores-por-alinhamento_sumarizada.xlsx")
