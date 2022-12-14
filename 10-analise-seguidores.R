@@ -109,7 +109,7 @@ seguidores_por_alinhamento_base_completa <- base_deteccao_por_palavras |>
     eh_direita = dplyr::case_when(
     author_description_extrem == TRUE ~ TRUE,
     author_name_extrem == TRUE ~ TRUE,
-    diferenca_qnt_seguidores > 10 ~ TRUE,
+    diferenca_qnt_seguidores >= 25 ~ TRUE,
     TRUE ~ NA
   )) |> 
   dplyr::arrange(desc(diferenca_qnt_seguidores))
