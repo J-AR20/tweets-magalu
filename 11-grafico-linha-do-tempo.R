@@ -49,7 +49,7 @@ grafico_linha_do_tempo <- ggplot(tweets_por_data) +
     y = "Quantidade de Tweets",
     x = "Mês/Ano"
   ) + 
-  scale_x_date(date_labels = "%d/%m/%Y") +
+  scale_x_date(date_labels = "%d/%m", limits = c(min(tweets_por_data$data), max(tweets_por_data$data)), date_breaks = "3 day") +
   theme_light()
 
 grafico_linha_do_tempo
