@@ -19,7 +19,6 @@ extreme_words <-
     'direita',
     'anti comunas',
     'desesquerdizando',
-    'liberdade',
     'bolsonarista',
     'brasil acima de tudo e deus acima de todos',
     'pro-vida',
@@ -34,7 +33,7 @@ extreme_words <-
 
 funcao_detectar_extreme_words <- function(x){
   dplyr::case_when(
-    str_detect(x, "fora bolsonaro|forabolsonaro|anti-bolsonarista") ~ FALSE,
+    str_detect(x, "fora bolsonaro|forabolsonaro|anti-bolsonarista|lulapresidente|lula presidente") ~ FALSE,
     str_detect(x, extreme_words) ~ TRUE,
     TRUE ~ FALSE
   )
