@@ -1,0 +1,24 @@
+---
+title: "Referências"
+author: "Beatriz"
+date: "2022-12-17"
+output: html_document
+bibliography: 
+  - "referencias_pacotes.bib"
+  - "referencias-manuais.bib"
+csl: "associacao-brasileira-de-normas-tecnicas.csl"
+---
+
+
+[@academictwitteR2021]
+
+[@R-httr]
+
+[@R-base]
+
+[@tidyverse2019]
+
+```{r}
+knitr::write_bib(c("academictwitteR", "httr", 
+                   "tidyverse"), file = "referencias_pacotes.bib")
+```
