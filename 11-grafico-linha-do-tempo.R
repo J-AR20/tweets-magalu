@@ -68,3 +68,22 @@ grafico_linha_do_tempo <- ggplot(tweets_por_data) +
 grafico_linha_do_tempo
 
 ggsave(filename = "grafico_linha_do_tempo.png", plot = grafico_linha_do_tempo)
+
+
+
+
+# grafico_simples_por_data
+grafico_simples_por_data <- ggplot(tweets_por_data) +
+  aes(x = data, y = n) +
+  geom_line(size = 0.5, colour = "#112446") +
+  labs(
+    #  caption = "\n Fonte: Dados extraídos da API do Twitter usando o pacote academictwitteR",
+    y = "Quantidade de Tweets",
+    x = "Data"
+  ) + 
+  scale_x_date(date_labels = "%d/%m", limits = c(min(tweets_por_data$data), max(tweets_por_data$data)), date_breaks = "3 day") +
+  theme_light() 
+
+grafico_simples_por_data
+
+ggsave(filename = "grafico_simples_por_data.png", plot = grafico_linha_do_tempo)
