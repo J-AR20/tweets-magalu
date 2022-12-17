@@ -36,6 +36,11 @@ vetor_queries_dois <- c('(magalu OR magazineluiza) racial',
                         '(magalu OR magazineluiza) mérito')
 
 
+todas_as_queries <- c(vetor_queries, vetor_queries_dois) |> 
+  unique() |> 
+  sort() 
+
+
 # criação de uma função para automatizar a busca das palavras-chave: 
 
 busca_magalu <- function(palavra_chave) { 
