@@ -57,7 +57,7 @@ grafico_linha_do_tempo <- ggplot(tweets_por_data) +
     segment.color = "gray"
   ) +
   labs(
-    caption = "\n Fonte: Dados extraídos da API do Twitter usando o pacote academictwitteR",
+  #  caption = "\n Fonte: Dados extraídos da API do Twitter usando o pacote academictwitteR",
     y = "Quantidade de Tweets",
     x = "Data"
   ) + 
