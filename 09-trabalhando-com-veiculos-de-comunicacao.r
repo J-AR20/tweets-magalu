@@ -78,9 +78,10 @@ media_tweets_categorizada <- media_tweets |>
             soma_retweet = sum(retweet_count, na.rm = TRUE),
             soma_respostas_tweet = sum(reply_count, na.rm = TRUE),
             soma_quotes = sum(quote_count, na.rm = TRUE),
+            soma_followers = sum(author_followers_count, na.rm = TRUE),
             mean_likes_per_tweet = round(soma_like/qtd_tweets),
             veiculos = paste0(unique(author_name), collapse = ', '),
-           veiculos_user = paste0(unique(author_username), collapse = ', ')) %>%
+            veiculos_user = paste0(unique(author_username), collapse = ', ')) %>%
   arrange(desc(mean_likes_per_tweet))
 
 
