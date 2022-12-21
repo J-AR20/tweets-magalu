@@ -99,7 +99,7 @@ write_xlsx(media_tweets_tab_1, 'data/media_tweets_tab_1.xlsx')
 
 
 media_tweets_tab_2 <- media_tweets_categorizada |> 
-  dplyr::select(-c(veiculos, veiculos_user, proximidade_ideologica_grupos_de_midia)) |> 
+  dplyr::select(-c(veiculos, veiculos_user)) |> 
   dplyr::arrange(desc(qtd_tweets))
 
 write_xlsx(media_tweets_tab_2, 'data/media_tweets_tab_2.xlsx')
