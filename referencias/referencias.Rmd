@@ -1,5 +1,5 @@
 ---
-title: "Referências"
+title: "Referências dos pacotes utilizados"
 author: "Beatriz"
 date: "2022-12-17"
 output: html_document
