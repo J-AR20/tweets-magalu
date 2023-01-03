@@ -1,0 +1,81 @@
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+# Análise de tweets sobre o programa de Trainee Magalu
+
+Esse repositório apresenta códigos para realizar as análises
+apresentadas na tese de doutorado de [Jonas
+Araujo](https://github.com/J-AR20).
+
+Auxílio nas análises: [Beatriz Milz](https://github.com/beatrizmilz).
+
+## Organização do repositório
+
+- `scripts/` - Códigos em R.
+
+- `tabelas/` - Tabelas exportadas em word apresentando resultados
+  sumarizados.
+
+- `referencias/` - Arquivos para gerar as referências dos pacotes em R
+  utilizados.
+
+- `graficos/` - Imagens geradas a partir dos códigos.
+
+- `dados_brutos/` - Dados obtidos a partir da API do Twitter.
+
+- `dados_output/` - Dados sumarizados, filtrados, etc.
+
+## Scripts
+
+- `scripts/01-baixar-tweets.R` - Códigos necessários para buscar e
+  baixar os tweets resultantes da busca. Apresenta as queries utilizadas
+  na busca, e a função utilizada para salvar os tweets.
+
+- `scripts/02-baixar-metricas.R` - Códigos necessários para baixar as
+  métricas (como curtidas, retweets, etc) dos tweets resultantes da
+  busca no script `scripts/01-baixar-tweets.R`.
+
+- `scripts/03-baixar-autores.R` - Códigos necessários para baixar dados
+  sobre os autores dos tweets resultantes da busca no script
+  `scripts/01-baixar-tweets.R`.
+
+- `scripts/04-unir-bases.R` - Códigos necessários para unir as bases
+  obtidas anteriormente. Também remove tweets de perfis que não são de
+  interesse da pesquisa.
+
+- `scripts/05-tweets-categorizar.R` - Filtrar os tweets com pelo menos
+  100 likes. Esses tweets foram exportados, disponibilizados no Google
+  Sheets, e categorizados por lá.
+
+- `scripts/06-explorando-categorias.R` - Explorando os dados dos tweets
+  categorizados.
+
+- `scripts/07-buscar-quem-segue.R` - Códigos necessários para baixar
+  dados sobre quem os autores dos tweets categorizados seguem.
+
+- `scripts/08-analise-seguidores.R` - Códigos necessários para baixar
+  tratar e organizar os dados baixados na etapa anterior, e busca
+  categorizar os autores (frente ampla, extrema direita).
+
+- `scripts/09-trabalhando-com-veiculos-de-comunicacao.R` - Códigos para
+  filtrar tweets postados por jornalistas e veículos de comunicação, e
+  realizar sumarizações.
+
+- `scripts/10-grafico-linha-do-tempo.R` - Códigos para gerar gráficos de
+  tweets ao longo do tempo.
+
+## Pacotes em R utilizados
+
+- [academictwitteR](https://github.com/cjbarrie/academictwitteR) -
+  acesso à API do twitter
+
+- [tidyverse](https://www.tidyverse.org/),
+  [janitor](https://cran.r-project.org/web/packages/janitor/index.html),
+  [abjutils](https://cran.r-project.org/web/packages/abjutils/index.html) -
+  limpeza, tratamento e manipulação dos dados.
+
+- [writexl](https://docs.ropensci.org/writexl/) - exportar arquivos
+  `.xlsx`.
+
+- [flextable](https://davidgohel.github.io/flextable/) - exportar
+  tabelas bem formatadas para word.
