@@ -1,12 +1,16 @@
 library(academictwitteR)
 library(readr)
 
-
+# caso precise buscar a senha
 # academictwitteR::set_bearer()
 
-base_bruta <- read_rds("data/base_bruta.rds")
+base_bruta <-
+  read_rds("dados_brutos/01-baixar-tweets/base_bruta.rds")
 
-base_metricas <- readr::read_rds("data/base_metricas.rds") |>
+caminho_base_metricas <-
+  "dados_brutos/02-baixar-metricas/base_metricas.rds"
+
+base_metricas <- readr::read_rds(caminho_base_metricas) |>
   dplyr::filter(value != "Too Many Requests" | is.na(value))
 
 # funcao  para buscar métricas
@@ -36,7 +40,7 @@ get_metrics <- function(id_tweet) {
   }
 }
 
-# Iterar nas
+# Iterar
 
 possibly_get_metrics <-
   purrr::possibly(get_metrics, otherwise = tibble::tibble(erro = "error"))
@@ -59,14 +63,12 @@ iterar_get_metrics <-
   }
 
 
-
-
 while (!"Too Many Requests" %in% base_metricas$value) {
   base_metricas <- iterar_get_metrics(base_metricas, base_bruta) |>
     dplyr::filter(is.na(erro))
   
   base_metricas |>
-    readr::write_rds("data/base_metricas.rds")
+    readr::write_rds(caminho_base_metricas)
   
   print(nrow(base_metricas))
   Sys.sleep(15)
@@ -75,10 +77,14 @@ while (!"Too Many Requests" %in% base_metricas$value) {
 beepr::beep()
 
 
+# criar base métricas final
+
+base_metricas <- readr::read_rds(caminho_base_metricas)
+
 base_metricas_final <- base_metricas |>
   dplyr::mutate(id_tweet = dplyr::coalesce(id, value)) |>
   dplyr::distinct(id_tweet, .keep_all = TRUE) |>
   dplyr::arrange(desc(like_count))
 
 base_metricas_final |>
-  readr::write_rds("data/base_metricas_final.rds")
+  readr::write_rds("dados_brutos/02-baixar-metricas/base_metricas_final.rds")
