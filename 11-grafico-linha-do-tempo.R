@@ -67,7 +67,7 @@ grafico_linha_do_tempo <- ggplot(tweets_por_data) +
 
 grafico_linha_do_tempo
 
-ggsave(filename = "grafico_linha_do_tempo.png", plot = grafico_linha_do_tempo)
+ggsave(filename = "graficos/grafico_linha_do_tempo.png", plot = grafico_linha_do_tempo)
 
 
 
@@ -86,4 +86,4 @@ grafico_simples_por_data <- ggplot(tweets_por_data) +
 
 grafico_simples_por_data
 
-ggsave(filename = "grafico_simples_por_data.png", plot = grafico_linha_do_tempo)
+ggsave(filename = "graficos/grafico_simples_por_data.png", plot = grafico_linha_do_tempo)
