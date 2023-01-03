@@ -9,7 +9,7 @@ output: word_document
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 ```
 
-## TABELA 1: Categorização dos tweets totaissobre o trainee magalu (mais de 100 likes)
+## TABELA 1: Categorização dos tweets totais sobre o trainee magalu (mais de 100 likes)
 
 ### Referência:
 
@@ -36,7 +36,7 @@ gerar_flextable_categorias <- function(df){
 
 ```{r}
 base_categorizada_completa <-
-  readr::read_rds("data/base_categorizada_completa.rds") |>
+  readr::read_rds("../data/base_categorizada_completa.rds") |>
   dplyr::mutate(orientacao_categoria = forcats::fct_relevel(orientacao_categoria, c("favoravel", "contrario", "outros")))
 ```
 
