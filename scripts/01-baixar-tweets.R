@@ -7,9 +7,9 @@ library(readxl)
 library(dplyr)
 library(janitor)
 
-# Lista de palavras chave para busca dos tweets criada a partir de contagem de 
+# Lista de palavras chave para busca dos tweets criada a partir de contagem de
 # palavras dos resultados
-# encontrados no google para o período pesquisa. 
+# encontrados no google para o período pesquisa.
 
 vetor_queries <- c(
   '#MagazineLuizaRacista',
@@ -35,17 +35,26 @@ vetor_queries <- c(
 )
 
 
-# criação de uma função para automatizar a busca das palavras-chave: 
+# criação de uma função para automatizar a busca das palavras-chave:
 
-busca_magalu <- function(palavra_chave) { 
-  tweets <- get_all_tweets(  
+busca_magalu <- function(palavra_chave) {
+  tweets <- get_all_tweets(
     query = palavra_chave,
-    start_tweets = "2020-09-18T00:00:00Z", # data inicial
-    end_tweets = "2020-10-18T00:00:00Z", # data final
+    start_tweets = "2020-09-18T00:00:00Z",
+    # data inicial
+    end_tweets = "2020-10-18T00:00:00Z",
+    # data final
     n = 80000 # oitenta mil tweets
-  ) %>% 
+  ) %>%
     mutate(query = palavra_chave, data_pesquisa = Sys.Date())
-  write_xlsx(tweets, paste0('dados_brutos/01-baixar-tweets/dados_magalu/tweets_', janitor::make_clean_names(palavra_chave), '.xlsx'))
+  write_xlsx(
+    tweets,
+    paste0(
+      'dados_brutos/01-baixar-tweets/dados_magalu/tweets_',
+      janitor::make_clean_names(palavra_chave),
+      '.xlsx'
+    )
+  )
   print(paste0('download realizado para query ', palavra_chave))
   tweets
 }
@@ -57,7 +66,7 @@ busca_magalu('#MagazineLuizaRacista')
 
 # Obtive um pouco menos de 20.000 respostas. Vou utilizar esse valor como parâmetro de n= na função.
 
-# A única query que bateu o teto dos 30.000 tweets foi o "racismo_reverso". Vou refazer a pesquisa 
+# A única query que bateu o teto dos 30.000 tweets foi o "racismo_reverso". Vou refazer a pesquisa
 # para essa palavra-chave e colocar o teto mais alto de 80.000.
 
 busca_magalu('racismo reverso')
@@ -75,22 +84,36 @@ vetor_queries %>% map(busca_magalu)
 
 # Unir os diferentes resultados de pesquisas feitas com palavras-chave diferentes, numa única base
 
-base_bruta_tweets <- list.files('dados_brutos/01-baixar-tweets/dados_magalu', full.names = TRUE, pattern = 'xlsx') %>%  # busca os caminhos de vários arquivos
+base_bruta_tweets <-
+  list.files(
+    'dados_brutos/01-baixar-tweets/dados_magalu',
+    full.names = TRUE,
+    pattern = 'xlsx'
+  ) %>%  # busca os caminhos de vários arquivos
   map(read_xlsx) %>%
-  bind_rows()  
+  bind_rows()
 
 write_rds("dados_brutos/01-baixar-tweets/base_bruta.rds")
 
 # Salvar a base final - tirar repeticoes ---------
 library(readr)
 
-base_bruta <- read_rds("dados_brutos/01-baixar-tweets/base_bruta.rds")
+base_bruta <-
+  read_rds("dados_brutos/01-baixar-tweets/base_bruta.rds")
 
-base_bruta_distinta <- base_bruta |> 
+base_bruta_distinta <- base_bruta |>
   dplyr::select(
-    -c(referenced_tweets, edit_history_tweet_ids,
-       entities, public_metrics, geo, attachments, withheld)
-  ) |> 
-  dplyr::distinct(id, .keep_all = TRUE) 
+    -c(
+      referenced_tweets,
+      edit_history_tweet_ids,
+      entities,
+      public_metrics,
+      geo,
+      attachments,
+      withheld
+    )
+  ) |>
+  dplyr::distinct(id, .keep_all = TRUE)
 
-write_rds(base_bruta_distinta, "dados_brutos/01-baixar-tweets/base_bruta_final.rds")
+write_rds(base_bruta_distinta,
+          "dados_brutos/01-baixar-tweets/base_bruta_final.rds")
