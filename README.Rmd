@@ -28,9 +28,9 @@ Auxílio nas análises: [Beatriz Milz](https://github.com/beatrizmilz).
 
 - `graficos/` - Imagens geradas a partir dos códigos.
 
-- `dados_brutos/` - Dados obtidos a partir da API do Twitter.
+- `dados_brutos/` - Dados obtidos a partir da API do Twitter. Essa pasta foi ocultada na versão disponível publicamente por motivos éticos.
 
-- `dados_output/` - Dados sumarizados, filtrados, etc.
+- `dados_output/` - Dados sumarizados, filtrados, entre outros. Essa pasta foi ocultada na versão disponível publicamente por motivos éticos.
 
 ## Scripts
 
